@@ -9,8 +9,11 @@ Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'tpope/vim-git'
 Plug 'tpope/vim-fireplace'
 Plug 'tpope/vim-fugitive'
+Plug 'hinrik/color-scheme-literal-tango'
 
 call plug#end()
+
+colorscheme literal_tango
 
 set shiftwidth=4
 set softtabstop=4
