@@ -2,7 +2,8 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'tpope/vim-sensible'
 Plug 'vim-perl/vim-perl'
-Plug 'janko-m/vim-test'
+" Plug 'janko-m/vim-test'
+Plug 'lucastheisen/vim-test'
 Plug 'pangloss/vim-javascript'
 " Plug 'scrooloose/syntastic'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }

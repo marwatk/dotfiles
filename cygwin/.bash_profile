@@ -1,4 +1,4 @@
-# source the users bashrc if it exists
+# Source the users bashrc if it exists
 if [ -f "${HOME}/.bashrc" ] ; then
   source "${HOME}/.bashrc"
 fi
@@ -15,3 +15,7 @@ set -o vi
 eStyle='$'
 id -G | grep -qE '\<(544|0)\>' && eStyle='\[\e[0;31m\]#\[\e[0m\]'
 PS1='\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]\n'"$eStyle "
+
+if [ -f "${HOME}/.bash_profile_env" ] ; then
+  source "${HOME}/.bash_profile_env"
+fi
