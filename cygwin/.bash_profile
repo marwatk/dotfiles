@@ -19,3 +19,5 @@ PS1='\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]\n'"$eStyle "
 if [ -f "${HOME}/.bash_profile_env" ] ; then
   source "${HOME}/.bash_profile_env"
 fi
+
+export TERM=xterm-256color

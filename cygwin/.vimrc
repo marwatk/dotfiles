@@ -2,22 +2,30 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'tpope/vim-sensible'
 Plug 'vim-perl/vim-perl'
-Plug 'janko-m/vim-test'
-"Plug 'lucastheisen/vim-test'
+Plug 'PProvost/vim-ps1'
+"Plug 'janko-m/vim-test'
 "Plug '~/git/pastdev-vim-test'
+Plug 'lucastheisen/vim-test'
 Plug 'krisajenkins/vim-projectlocal'
 Plug 'pangloss/vim-javascript'
-" Plug 'scrooloose/syntastic'
+"Plug 'scrooloose/syntastic'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'tpope/vim-git'
 Plug 'tpope/vim-fireplace'
 Plug 'tpope/vim-fugitive'
-Plug 'hinrik/color-scheme-literal-tango'
 Plug 'thinca/vim-prettyprint'
+
+Plug 'hinrik/color-scheme-literal-tango'
+Plug 'nanotech/jellybeans.vim'
 
 call plug#end()
 
-colorscheme literal_tango
+if $TERM == "xterm-256color" || $TERM == "screen-256color" || $COLORTERM == "gnome-terminal"
+  set t_Co=256
+  colorscheme jellybeans
+else 
+  colorscheme literal_tango
+endif
 
 set shiftwidth=4
 set softtabstop=4
