@@ -4,8 +4,6 @@ Plug 'tpope/vim-sensible'
 Plug 'vim-perl/vim-perl'
 Plug 'PProvost/vim-ps1'
 Plug 'janko-m/vim-test'
-"Plug '~/git/pastdev-vim-test'
-"Plug 'lucastheisen/vim-test'
 Plug 'krisajenkins/vim-projectlocal'
 Plug 'pangloss/vim-javascript'
 "Plug 'scrooloose/syntastic'
@@ -17,6 +15,15 @@ Plug 'thinca/vim-prettyprint'
 
 Plug 'hinrik/color-scheme-literal-tango'
 Plug 'nanotech/jellybeans.vim'
+
+" Typescript
+"Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+"Plug 'Quramy/tsuquyomi'
+Plug 'leafgarland/typescript-vim'
+Plug 'Quramy/vim-js-pretty-template'
+Plug 'jason0x43/vim-js-indent'
+Plug 'Quramy/vim-dtsm'
+Plug 'mhartington/vim-typings'
 
 call plug#end()
 
