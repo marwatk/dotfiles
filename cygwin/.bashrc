@@ -1,5 +1,5 @@
-# No output is allowed before interactive test below, will break scp
-# https://unix.stackexchange.com/a/257613
+# If not running interactively, don't go further
+[[ "$-" != *i* ]] && return
 
 # Shell Options
 alias grep='grep --color' 
@@ -24,7 +24,3 @@ if [ -f "${HOME}/.bashrc_env" ] ; then
   source "${HOME}/.bashrc_env"
 fi
 
-# If not running interactively, don't go further
-[[ "$-" != *i* ]] && return
-
-# Settings for interactive shells should be below here, output also allowed
