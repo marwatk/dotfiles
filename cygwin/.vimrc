@@ -1,5 +1,7 @@
 call plug#begin('~/.vim/plugged')
 
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'vimawesome/taglist'
 Plug 'tpope/vim-sensible'
 Plug 'vim-perl/vim-perl'
 Plug 'PProvost/vim-ps1'
@@ -51,3 +53,35 @@ nmap <silent> <leader>l :TestLast<CR>
 nmap <silent> <leader>g :TestVisit<CR>
 nmap <silent> <tab> <C-w><C-w>
 
+"Set window sizes for tag list and nerdtree
+:let g:NERDTreeWinSize=30
+:let g:Tlist_WinWidth=40
+:let g:Tlist_Use_Right_Window=1
+
+"Open nerdtree
+"autocmd VimEnter * NERDTree
+autocmd VimEnter * TlistToggle
+"autocmd VimEnter * wincmd l
+
+"Prevent me from using arrow keys
+inoremap  <Up>     <NOP>
+inoremap  <Down>   <NOP>
+inoremap  <Left>   <NOP>
+inoremap  <Right>  <NOP>
+noremap   <Up>     <NOP>
+noremap   <Down>   <NOP>
+noremap   <Left>   <NOP>
+noremap   <Right>  <NOP>
+
+"Ctrl+h to nerdtree
+"nnoremap <C-h> <C-w>10h
+
+"Ctrl+l to taglist
+nnoremap <C-l> <C-w>10l
+
+"Ctrl+o to CtrlP File Plugin
+"nnoremap <C-o> :CtrlPBuffer<CR>
+let g:ctrlp_map='<c-o>'
+
+"Ctrl+p to CtrlP Buffer Plugin
+nnoremap <C-p> :CtrlPBuffer<CR>

@@ -13,6 +13,10 @@ if [ -d "${HOME}/bin" ] ; then
   PATH="${HOME}/bin:${PATH}"
 fi
 
+#Prevent Ctrl+s from locking terminal
+#https://unix.stackexchange.com/questions/72086/ctrl-s-hang-terminal-emulator
+stty -ixon
+
 # In Cygwin, want to know if the shell is being "Run as administrator"
 # So set the prompt to a red #
 eStyle='$'
