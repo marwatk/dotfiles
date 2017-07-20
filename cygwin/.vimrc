@@ -1,5 +1,6 @@
 call plug#begin('~/.vim/plugged')
 
+Plug 'vim-scripts/taglist.vim'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'vimawesome/taglist'
 Plug 'tpope/vim-sensible'
