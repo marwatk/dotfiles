@@ -61,7 +61,7 @@ nmap <silent> <tab> <C-w><C-w>
 
 "Open nerdtree
 "autocmd VimEnter * NERDTree
-autocmd VimEnter * TlistToggle
+"autocmd VimEnter * TlistToggle
 "autocmd VimEnter * wincmd l
 
 "Prevent me from using arrow keys
