@@ -22,6 +22,7 @@ stty -ixon
 eStyle='$'
 id -G | grep -qE '\<(544|0)\>' && eStyle='\[\e[0;31m\]#\[\e[0m\]'
 PS1='\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]\n'"$eStyle "
+PROMPT_DIRTRIM=3
 
 # Source host specific bashrc if it exists
 if [ -f "${HOME}/.bashrc_env" ] ; then
