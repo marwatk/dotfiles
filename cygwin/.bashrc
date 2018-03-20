@@ -6,7 +6,6 @@ alias grep='grep --color'
 alias scpresume='rsync --partial --progress -r --rsh="ssh"'
 alias vi='vim'
 export TERM=xterm-256color
-set -o vi
 
 # Set PATH so it includes user's private bin if it exists
 if [ -d "${HOME}/bin" ] ; then
@@ -95,3 +94,5 @@ export HISTFILE=~/.bash_eternal_history
 # http://superuser.com/questions/20900/bash-history-loss
 PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 export HISTCONTROL=ignorespace
+
+export PATH="$PATH:/home/mwatkins/jpm/bin"
