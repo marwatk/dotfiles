@@ -1,0 +1,30 @@
+#!/bin/bash
+
+#https://stackoverflow.com/a/16349776/677201
+cd "${0%/*}"
+
+mkdir -p ~/bin
+cp cygwin/bin/* ~/bin
+chmod a+x ~/bin/*
+
+if [ -L ~/.bash_profile ]; then
+    echo "Not setting up bash_profile, already a sym-link"
+elif [ -e ~/.bash_profile_env ]; then
+    echo "~/.bash_profile_env already exists, skipping bash profile setup"
+elif [ -e ~/.bashrc_env ]; then
+    echo "~/.bashrc_env already exists, skipping bash profile setup"
+else
+    mv ~/.bash_profile ~/.bash_profile_env 2>/dev/null
+    mv ~/.bashrc ~/.bashrc_env 2>/dev/null
+    ln -s $PWD/cygwin/.bashrc ~/.bashrc
+    ln -s $PWD/cygwin/.bash_profile ~/.bash_profile
+fi
+
+if [ -L ~/.minttyrc ]; then
+    echo "Mintty already set up"
+else
+    if [ -e ~/.minttyrc ]; then
+        mv ~/.mittyrc ~/.minttyrc.orig
+    fi
+    ln -s $PWD/cygwin/.minttyrc ~/.minttyrc
+fi
