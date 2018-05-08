@@ -18,6 +18,40 @@ stty -ixon
 
 # Set prompt color here so we can override per-host
 bashPromptHostColor="\[\e[37m\]"
+#Default
+  #bashPromptHostColor="\[\e[39m\]"
+#Black
+  #bashPromptHostColor="\[\e[30m\]"
+#Red
+  #bashPromptHostColor="\[\e[31m\]"
+#Green
+  #bashPromptHostColor="\[\e[32m\]"
+#Yellow
+  #bashPromptHostColor="\[\e[33m\]"
+#Blue
+  #bashPromptHostColor="\[\e[34m\]"
+#Magenta
+  #bashPromptHostColor="\[\e[35m\]"
+#Cyan
+  #bashPromptHostColor="\[\e[36m\]"
+#Light gray
+  #bashPromptHostColor="\[\e[37m\]"
+#Dark gray
+  #bashPromptHostColor="\[\e[90m\]"
+#Light red
+  #bashPromptHostColor="\[\e[91m\]"
+#Light green
+  #bashPromptHostColor="\[\e[92m\]"
+#Light yellow
+  #bashPromptHostColor="\[\e[93m\]"
+#Light blue
+  #bashPromptHostColor="\[\e[94m\]"
+#Light magenta
+  #bashPromptHostColor="\[\e[95m\]"
+#Light cyan
+  #bashPromptHostColor="\[\e[96m\]"
+#White
+  #bashPromptHostColor="\[\e[97m\]"
 # Source host specific bashrc if it exists
 if [ -f "${HOME}/.bashrc_env" ] ; then
   source "${HOME}/.bashrc_env"
