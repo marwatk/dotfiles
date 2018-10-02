@@ -125,9 +125,10 @@ function parse_git_dirty {
 # In Cygwin, want to know if the shell is being "Run as administrator"
 # So set the prompt to a red #
 hostPromptUser="$bashPromptHostColor\u@\h"
+shellTitle="\033]0;\w\007"
 eStyle='$'
 id -G | grep -qE '\<(544|0)\>' && eStyle='\[\e[0;31m\]#\[\e[0m\]'
-PS1="$hostPromptUser \[\e[33m\]\w\[\e[0m\] \`parse_git_branch\` \n$eStyle "
+PS1="$hostPromptUser$shellTitle \[\e[33m\]\w\[\e[0m\] \`parse_git_branch\` \n$eStyle "
 PROMPT_DIRTRIM=3
 
 
