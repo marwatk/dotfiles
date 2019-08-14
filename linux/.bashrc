@@ -10,6 +10,7 @@ alias grep='grep --color'
 alias scpresume='rsync --partial --progress -r --rsh="ssh"'
 alias vi='vim'
 export TERM=xterm-256color
+alias myhist='cat ~/.bash_eternal_history.alt'
 
 # Set PATH so it includes user's private bin if it exists
 if [ -d "${HOME}/bin" ] ; then
@@ -149,6 +150,9 @@ export HISTTIMEFORMAT="[%F %T] "
 export HISTFILE=~/.bash_eternal_history
 # Force prompt to write history after every command.
 # http://superuser.com/questions/20900/bash-history-loss
+# Also write to a backup file in case the real one is clobbered
+# https://debian-administration.org/article/543/Bash_eternal_history
+PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ; }"'history -a; echo "$(history 1)" >> ~/.bash_eternal_history.alt'
 PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 export HISTCONTROL=ignoreboth
 
