@@ -1,6 +1,10 @@
 # If not running interactively, don't go further
 [[ "$-" != *i* ]] && return
 
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
 # Shell Options
 alias grep='grep --color' 
 alias scpresume='rsync --partial --progress -r --rsh="ssh"'
@@ -146,6 +150,6 @@ export HISTFILE=~/.bash_eternal_history
 # Force prompt to write history after every command.
 # http://superuser.com/questions/20900/bash-history-loss
 PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
-export HISTCONTROL=ignorespace
+export HISTCONTROL=ignoreboth
 
 export PATH="$PATH:/home/mwatkins/jpm/bin"
