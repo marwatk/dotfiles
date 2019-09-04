@@ -57,10 +57,6 @@ bashPromptHostColor="\[\e[37m\]"
   #bashPromptHostColor="\[\e[96m\]"
 #White
   #bashPromptHostColor="\[\e[97m\]"
-# Source host specific bashrc if it exists
-if [ -f "${HOME}/.bashrc_env" ] ; then
-  source "${HOME}/.bashrc_env"
-fi
 
 if hash git 2>/dev/null; then
 	git config --global core.pager "diff-so-fancy | less --tabs=4 -RFX"
@@ -156,4 +152,8 @@ PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ; }"'history -a; echo "$(histo
 PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 export HISTCONTROL=ignoreboth
 
-export PATH="$PATH:/home/mwatkins/jpm/bin"
+# Source host specific bashrc if it exists
+if [ -f "${HOME}/.bashrc_env" ] ; then
+  source "${HOME}/.bashrc_env"
+fi
+
