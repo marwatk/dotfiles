@@ -78,6 +78,9 @@ fi
 
 # get current branch in git repo
 function parse_git_branch() {
+	if [[ -n "${NO_GIT_STATUS}" ]]; then
+		return
+	fi
 	BRANCH=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
 	if [ ! "${BRANCH}" == "" ]
 	then
@@ -123,17 +126,6 @@ function parse_git_dirty {
 	fi
 }
 
-# In Cygwin, want to know if the shell is being "Run as administrator"
-# So set the prompt to a red #
-hostPromptUser="$bashPromptHostColor\u@\h"
-shellTitle="\033]0;\w\007"
-eStyle='$'
-id -G | grep -qE '\<(544|0)\>' && eStyle='\[\e[0;31m\]#\[\e[0m\]'
-PS1="$hostPromptUser$shellTitle \[\e[33m\]\w\[\e[0m\] \`parse_git_branch\` \n$eStyle "
-PROMPT_DIRTRIM=3
-
-
-
 # Eternal bash history.
 # ---------------------
 # Undocumented feature which sets the size to "unlimited".
@@ -150,10 +142,19 @@ export HISTFILE=~/.bash_eternal_history
 # https://debian-administration.org/article/543/Bash_eternal_history
 PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ; }"'history -a; echo "$(history 1)" >> ~/.bash_eternal_history.alt'
 PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
-export HISTCONTROL=ignoreboth
+export HISTCONTROL=ignorespace
 
 # Source host specific bashrc if it exists
 if [ -f "${HOME}/.bashrc_env" ] ; then
   source "${HOME}/.bashrc_env"
 fi
+
+# In Cygwin, want to know if the shell is being "Run as administrator"
+# So set the prompt to a red #
+hostPromptUser="$bashPromptHostColor\u@\h"
+shellTitle="\033]0;\w\007"
+eStyle='$'
+id -G | grep -qE '\<(544|0)\>' && eStyle='\[\e[0;31m\]#\[\e[0m\]'
+PS1="$hostPromptUser$shellTitle \[\e[33m\]\w\[\e[0m\] \`parse_git_branch\` \n$eStyle "
+PROMPT_DIRTRIM=3
 
