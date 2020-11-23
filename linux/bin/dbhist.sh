@@ -118,7 +118,7 @@ END
 # To learn the tool
 dbhist() {
   local __limit=100
-  local __all=false
+  local __all=true
   local __self=false
   local __starts=false
   local __verbose=false
@@ -138,8 +138,8 @@ Usage:
 Options:
   --limit {number}
     number of latest commands to show. Defaults to 100.
-  --all
-    include history of all sessions. Not only current.
+  --session
+    limit to current session. Defaults to all
   --self
     include history about dbhist
   --starts
@@ -165,8 +165,8 @@ END
          return 1
         fi
       ;;
-      (--all)
-        __all=true
+      (--session)
+        __all=false
       ;;
       (--self)
         __self=true
@@ -200,10 +200,10 @@ END
       ;;
       (*)
         if [[ -n "${__query}" ]]; then
-          2>&1 echo "Cannot specify more than one query"
-          return 1
+          __query="${__query} ${1:?requires value}"
+        else
+          __query="${1:?requires value}"
         fi
-        __query="${1:?requires value}"
       ;;
     esac
     shift
