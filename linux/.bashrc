@@ -78,7 +78,7 @@ fi
 
 # get current branch in git repo
 function parse_git_branch() {
-	if [[ -n "${NO_GIT_STATUS}" ]]; then
+	if [[ -n "${NO_GIT_STATUS}" || -e "./.no-git-status" ]]; then
 		return
 	fi
 	BRANCH=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
@@ -126,23 +126,10 @@ function parse_git_dirty {
 	fi
 }
 
-# Eternal bash history.
-# ---------------------
-# Undocumented feature which sets the size to "unlimited".
-# http://stackoverflow.com/questions/9457233/unlimited-bash-history
-export HISTFILESIZE=
-export HISTSIZE=
-export HISTTIMEFORMAT="[%F %T] "
-# Change the file location because certain bash sessions truncate .bash_history file upon close.
-# http://superuser.com/questions/575479/bash-history-truncated-to-500-lines-on-each-login
-export HISTFILE=~/.bash_eternal_history
-# Force prompt to write history after every command.
-# http://superuser.com/questions/20900/bash-history-loss
-# Also write to a backup file in case the real one is clobbered
-# https://debian-administration.org/article/543/Bash_eternal_history
-PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ; }"'history -a; echo "$(history 1)" >> ~/.bash_eternal_history.alt'
-PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+# For dbhist.sh
+export HISTTIMEFORMAT="%s "
 export HISTCONTROL=ignorespace
+. ~/bin/dbhist.sh
 
 # Source host specific bashrc if it exists
 if [ -f "${HOME}/.bashrc_env" ] ; then
