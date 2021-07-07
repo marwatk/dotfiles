@@ -96,6 +96,7 @@ __db_hist_prompt() {
   local __formated_history=
   local __num=
   local __epoch=
+  local __command=
   local __pwd="${PWD}"
   if [[ "${OLDPWD}" !=  "${__dbhist_oldpwd}" ]]; then
     __pwd="${OLDPWD}"
@@ -108,7 +109,7 @@ __db_hist_prompt() {
   __command="$(echo "${__formated_history}" | sed -E 's/([^@]+)@([^@]+)@(.+)/\3/')"
   __dbhist_sqlite <<-END
 INSERT INTO history(hist_id, epoch, cmd, ppid, pwd, salt)
-VALUES("${__num}", "${__epoch}", "${__command//\"/""}", ${PPID}, "${__pwd//\"/""}", ${__dbhist_salt});
+VALUES("${__num}", "${__epoch}", "${__command//\"/\"\"}", ${PPID}, "${__pwd//\"/""}", ${__dbhist_salt});
 END
   
 }
@@ -122,7 +123,7 @@ dbhist() {
   local __self=false
   local __starts=false
   local __verbose=false
-  local __query=''
+  local -a __query=()
   local __location=''
   local __pwd=false
   while ! [[ $# -eq 0 || -z "${1}" ]]; do
@@ -199,11 +200,7 @@ END
         return 1
       ;;
       (*)
-        if [[ -n "${__query}" ]]; then
-          __query="${__query} ${1:?requires value}"
-        else
-          __query="${1:?requires value}"
-        fi
+        __query+=("${1:?requires value}")
       ;;
     esac
     shift
@@ -230,15 +227,17 @@ END
   if ! ${__self}; then
     __sql+="AND (cmd != 'dbhist' AND cmd NOT LIKE 'dbhist %') "
   fi
-  if [[ -n "${__query}" ]]; then
-    __query=${__query//\"/""}
-    if ! ${__starts} && [[ "${__query}" != %* ]]; then
-      __query="%${__query}"
-    fi
-    if [[ "${__query}" != *% ]]; then
-      __query+="%"
-    fi
-    __sql+="AND cmd LIKE \"${__query}\" ESCAPE '\' "
+  if [[ -n "${__query[*]}" ]]; then
+    for __one_query in "${__query[@]}"; do
+      __one_query="${__one_query//\"/""}"
+      if ! ${__starts} && [[ "${__one_query}" != %* ]]; then
+        __one_query="%${__one_query}"
+      fi
+      if [[ "${__one_query}" != *% ]]; then
+        __one_query+="%"
+      fi
+      __sql+="AND cmd LIKE \"${__one_query}\" ESCAPE '\' "
+    done;
   fi
   __pwd_l="${PWD//\"/""}"
   case "${__location}" in
