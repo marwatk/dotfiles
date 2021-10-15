@@ -6,7 +6,7 @@
 shopt -s checkwinsize
 
 # Shell Options
-alias grep='grep --color' 
+alias grep='grep --color'
 alias scpresume='rsync --partial --progress -r --rsh="ssh"'
 alias vi='vim'
 export TERM=xterm-256color
@@ -21,42 +21,23 @@ fi
 #https://unix.stackexchange.com/questions/72086/ctrl-s-hang-terminal-emulator
 stty -ixon
 
+GREEN="\[\033[0;32m\]"
+CYAN="\[\033[0;36m\]"
+RED="\[\033[0;31m\]"
+PURPLE="\[\033[0;35m\]"
+BROWN="\[\033[0;33m\]"
+LIGHT_GRAY="\[\033[0;37m\]"
+LIGHT_BLUE="\[\033[1;34m\]"
+LIGHT_GREEN="\[\033[1;32m\]"
+LIGHT_CYAN="\[\033[1;36m\]"
+LIGHT_RED="\[\033[1;31m\]"
+LIGHT_PURPLE="\[\033[1;35m\]"
+YELLOW="\[\033[1;33m\]"
+WHITE="\[\033[1;37m\]"
+RESTORE="\[\033[0m\]" #0m restores to the terminal's default colour
+
 # Set prompt color here so we can override per-host
-bashPromptHostColor="\[\e[37m\]"
-#Default
-  #bashPromptHostColor="\[\e[39m\]"
-#Black
-  #bashPromptHostColor="\[\e[30m\]"
-#Red
-  #bashPromptHostColor="\[\e[31m\]"
-#Green
-  #bashPromptHostColor="\[\e[32m\]"
-#Yellow
-  #bashPromptHostColor="\[\e[33m\]"
-#Blue
-  #bashPromptHostColor="\[\e[34m\]"
-#Magenta
-  #bashPromptHostColor="\[\e[35m\]"
-#Cyan
-  #bashPromptHostColor="\[\e[36m\]"
-#Light gray
-  #bashPromptHostColor="\[\e[37m\]"
-#Dark gray
-  #bashPromptHostColor="\[\e[90m\]"
-#Light red
-  #bashPromptHostColor="\[\e[91m\]"
-#Light green
-  #bashPromptHostColor="\[\e[92m\]"
-#Light yellow
-  #bashPromptHostColor="\[\e[93m\]"
-#Light blue
-  #bashPromptHostColor="\[\e[94m\]"
-#Light magenta
-  #bashPromptHostColor="\[\e[95m\]"
-#Light cyan
-  #bashPromptHostColor="\[\e[96m\]"
-#White
-  #bashPromptHostColor="\[\e[97m\]"
+bashPromptHostColor="${WHITE}"
 
 if hash git 2>/dev/null; then
 	git config --global core.pager "diff-so-fancy | less --tabs=4 -RFX"
@@ -81,10 +62,9 @@ function parse_git_branch() {
 	if [[ -n "${NO_GIT_STATUS}" || -e "./.no-git-status" ]]; then
 		return
 	fi
-	BRANCH=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
-	if [ ! "${BRANCH}" == "" ]
-	then
-		STAT=`parse_git_dirty`
+	BRANCH="$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')"
+	if [[ -n "${BRANCH}" ]]; then
+		STAT="$(parse_git_dirty)"
 		echo "[${BRANCH}${STAT}]"
 	else
 		echo ""
@@ -93,37 +73,46 @@ function parse_git_branch() {
 
 # get current status of git repo
 function parse_git_dirty {
-	status=`git status 2>&1 | tee`
-	dirty=`echo -n "${status}" 2> /dev/null | grep "modified:" &> /dev/null; echo "$?"`
-	untracked=`echo -n "${status}" 2> /dev/null | grep "Untracked files" &> /dev/null; echo "$?"`
-	ahead=`echo -n "${status}" 2> /dev/null | grep "Your branch is ahead of" &> /dev/null; echo "$?"`
-	newfile=`echo -n "${status}" 2> /dev/null | grep "new file:" &> /dev/null; echo "$?"`
-	renamed=`echo -n "${status}" 2> /dev/null | grep "renamed:" &> /dev/null; echo "$?"`
-	deleted=`echo -n "${status}" 2> /dev/null | grep "deleted:" &> /dev/null; echo "$?"`
+	status="$(git status 2>&1)"
 	bits=''
-	if [ "${renamed}" == "0" ]; then
+	if [[ "${status}" == *"renamed:"* ]]; then
 		bits=">${bits}"
 	fi
-	if [ "${ahead}" == "0" ]; then
+	if [[ "${status}" == *"Your branch is ahead of"* ]]; then
 		bits="*${bits}"
 	fi
-	if [ "${newfile}" == "0" ]; then
+	if [[ "${status}" == *"new file:"* ]]; then
 		bits="+${bits}"
 	fi
-	if [ "${untracked}" == "0" ]; then
+	if [[ "${status}" == *"Untracked files"* ]]; then
 		bits="?${bits}"
 	fi
-	if [ "${deleted}" == "0" ]; then
+	if [[ "${status}" == *"deleted:"* ]]; then
 		bits="x${bits}"
 	fi
-	if [ "${dirty}" == "0" ]; then
+	if [[ "${status}" == *"modified:"* ]]; then
 		bits="!${bits}"
 	fi
-	if [ ! "${bits}" == "" ]; then
-		echo " ${bits}"
+	if [[ "${status}" == *"branch is behind"* ]]; then
+    bits="${bits}(behind)"
+  fi
+  if [ ! "${bits}" == "" ]; then
+		echo "${bits}"
 	else
 		echo ""
 	fi
+}
+
+function prompt_command {
+  if [[ "${marwatk_last_folder}" != "${PWD}" ]]; then
+    marwatk_last_folder="${PWD}"
+    # We just changed folders
+    if [[ -d .git ]]; then
+      # Fetch to see if we're behind
+      git fetch "$(git remote | head -1)" &>/dev/null
+    fi
+  fi
+  export PS1="$hostPromptUser$shellTitle \[\e[33m\]\w\[\e[0m\] \$(parse_git_branch) \[\e[90m\]\$(date +%R:%S)\[\e[0m\]\n$eStyle "
 }
 
 # For dbhist.sh
@@ -142,6 +131,5 @@ hostPromptUser="$bashPromptHostColor\u@\h"
 shellTitle="\033]0;\w\007"
 eStyle='$'
 id -G | grep -qE '\<(544|0)\>' && eStyle='\[\e[0;31m\]#\[\e[0m\]'
-PS1="$hostPromptUser$shellTitle \[\e[33m\]\w\[\e[0m\] \$(parse_git_branch) \[\e[90m\]\$(date +%R:%S)\[\e[0m\]\n$eStyle "
+PROMPT_COMMAND=prompt_command
 PROMPT_DIRTRIM=3
-
