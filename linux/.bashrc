@@ -79,7 +79,7 @@ function parse_git_dirty {
 		bits=">${bits}"
 	fi
 	if [[ "${status}" == *"Your branch is ahead of"* ]]; then
-		bits="*${bits}"
+		bits="^${bits}"
 	fi
 	if [[ "${status}" == *"new file:"* ]]; then
 		bits="+${bits}"
@@ -94,10 +94,10 @@ function parse_git_dirty {
 		bits="!${bits}"
 	fi
 	if [[ "${status}" == *"branch is behind"* ]]; then
-    bits="${bits}(behind)"
+    bits="v${bits}"
   fi
   if [ ! "${bits}" == "" ]; then
-		echo "${bits}"
+		echo " ${bits}"
 	else
 		echo ""
 	fi
@@ -131,5 +131,5 @@ hostPromptUser="$bashPromptHostColor\u@\h"
 shellTitle="\033]0;\w\007"
 eStyle='$'
 id -G | grep -qE '\<(544|0)\>' && eStyle='\[\e[0;31m\]#\[\e[0m\]'
-PROMPT_COMMAND=prompt_command
+PROMPT_COMMAND="prompt_command${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
 PROMPT_DIRTRIM=3
