@@ -28,9 +28,9 @@
 # Verified that works with Bash 3/4
 
 # Configuration
-#   DBHISTORY=true - use false to disable 
+#   DBHISTORY=true - use false to disable
 #   DBHISTORYFILE=$HOME/.dbhist - location of dbhist file
-# 
+#
 # To make it work I keep next configuration for bash, the only important is the
 # time format, to make it unixtime
 #
@@ -92,29 +92,36 @@ __db_hist_prompt() {
   if [[ -n "${COMP_LINE}" ]]; then
     return
   fi
-
+  local __history=
   local __formated_history=
   local __num=
   local __epoch=
   local __command=
+  local __stmt=
+  local __re='^[[:space:]]+([[:digit:]]+)[[:space:]]+([[:digit:]]+) (.*)'
   local __pwd="${PWD}"
   if [[ "${OLDPWD}" !=  "${__dbhist_oldpwd}" ]]; then
     __pwd="${OLDPWD}"
     __dbhist_oldpwd="${OLDPWD}"
   fi
   #   521 1492964870 history 1
-  __formated_history="$(history 1 | sed -E 's/[[:space:]]+([[:digit:]]+)[[:space:]]+([[:digit:]]+)[[:space:]](.+)/\1@\2@\3/')"
-  __num="$(echo "${__formated_history}" | sed -E 's/([^@]+)@([^@]+)@(.+)/\1/')"
-  __epoch="$(echo "${__formated_history}" | sed -E 's/([^@]+)@([^@]+)@(.+)/\2/')"
-  __command="$(echo "${__formated_history}" | sed -E 's/([^@]+)@([^@]+)@(.+)/\3/')"
-  __dbhist_sqlite <<-END
+  __history="$(history 1)"
+  if [[ "${__history}" =~ $__re ]]; then
+    __num="${BASH_REMATCH[1]}"
+    __epoch="${BASH_REMATCH[2]}"
+    __command="${BASH_REMATCH[3]}"
+    __command="${__command//\"/\"\"}"
+    __command="${__command//$'\n'/'\n'}"
+    __dbhist_sqlite <<-END
 INSERT INTO history(hist_id, epoch, cmd, ppid, pwd, salt)
-VALUES("${__num}", "${__epoch}", "${__command//\"/\"\"}", ${PPID}, "${__pwd//\"/""}", ${__dbhist_salt});
+VALUES("${__num}", "${__epoch}", "${__command}", ${PPID}, "${__pwd//\"/""}", ${__dbhist_salt});
 END
-  
+  else
+    >&2 echo "warning: history not parseable for dbhist <<${__history}>>"
+  fi
 }
 
-# Use 
+# Use
 #   dbhist --help
 # To learn the tool
 dbhist() {
@@ -210,8 +217,8 @@ END
     __pwd_q='pwd || " > " ||'
   fi
   local __sql="
-  SELECT 
-    substr('      '||max(id),-6) || 
+  SELECT
+    substr('      '||max(id),-6) ||
     ' | ' ||
     datetime(max(epoch), 'unixepoch', 'localtime') ||
     ' | ' ||
@@ -254,7 +261,7 @@ END
   if ${__pwd}; then
     __sql+=", pwd "
   fi
-  __sql+="ORDER BY max(id) DESC LIMIT ${__limit} ;"
+  __sql+="ORDER BY max(id) LIMIT ${__limit} ;"
   if ${__verbose}; then
     echo "database:"
     __dbhist_file
