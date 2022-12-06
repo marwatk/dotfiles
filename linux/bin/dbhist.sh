@@ -111,7 +111,6 @@ __db_hist_prompt() {
     __epoch="${BASH_REMATCH[2]}"
     __command="${BASH_REMATCH[3]}"
     __command="${__command//\"/\"\"}"
-    __command="${__command//$'\n'/'\n'}"
     __dbhist_sqlite <<-END
 INSERT INTO history(hist_id, epoch, cmd, ppid, pwd, salt)
 VALUES("${__num}", "${__epoch}", "${__command}", ${PPID}, "${__pwd//\"/""}", ${__dbhist_salt});
@@ -217,6 +216,7 @@ END
     __pwd_q='pwd || " > " ||'
   fi
   local __sql="
+  SELECT output FROM (
   SELECT
     substr('      '||max(id),-6) ||
     ' | ' ||
@@ -225,7 +225,8 @@ END
     substr('      '||count(*),-6) ||
     ' | ' ||
     ${__pwd_q}
-    cmd
+    cmd as output,
+    max(id) as max_id
   FROM history
   WHERE 1 "
   if ! ${__all}; then
@@ -261,7 +262,8 @@ END
   if ${__pwd}; then
     __sql+=", pwd "
   fi
-  __sql+="ORDER BY max(id) LIMIT ${__limit} ;"
+  __sql+="ORDER BY max(id) DESC LIMIT ${__limit}
+  ) ORDER BY max_id;"
   if ${__verbose}; then
     echo "database:"
     __dbhist_file
