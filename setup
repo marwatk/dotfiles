@@ -1,11 +1,15 @@
 #!/bin/bash
 
+set -ex
+
 #https://stackoverflow.com/a/16349776/677201
 cd "${0%/*}"
 
 mkdir -p ~/bin
-cp linux/bin/* ~/bin
-chmod a+x ~/bin/*
+for i in linux/bin/*; do
+    rm -f "${HOME:?}/bin/$(basename "$i")"
+    ln -s "$(readlink -f "$i")" ~/bin/
+done
 
 if [ -L ~/.bash_profile ]; then
     echo "Not setting up bash_profile, already a sym-link"
