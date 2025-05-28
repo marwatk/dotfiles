@@ -18,8 +18,8 @@ elif [ -e ~/.bash_profile_env ]; then
 elif [ -e ~/.bashrc_env ]; then
     echo "~/.bashrc_env already exists, skipping bash profile setup"
 else
-    mv ~/.bash_profile ~/.bash_profile_env 2>/dev/null
-    mv ~/.bashrc ~/.bashrc_env 2>/dev/null
+    mv ~/.bash_profile ~/.bash_profile_env 2>/dev/null || :
+    mv ~/.bashrc ~/.bashrc_env 2>/dev/null || :
     ln -s $PWD/linux/.bashrc ~/.bashrc
     ln -s $PWD/linux/.bash_profile ~/.bash_profile
 fi

@@ -112,7 +112,7 @@ function prompt_command {
       git fetch "$(git remote | head -1)" &>/dev/null
     fi
   fi
-  export PS1="$hostPromptUser$shellTitle \[\e[33m\]\w\[\e[0m\] \$(parse_git_branch 2>/dev/null) \[\e[90m\]\$(date +%R:%S)\[\e[0m\]\n$eStyle "
+  export PS1="$hostPromptUser$shellTitle \[\e[33m\]\w\[\e[0m\] `parse_git_branch 2>/dev/null` \[\e[90m\]`date +%R:%S`\[\e[0m\]\n$eStyle "
 }
 
 # For dbhist.sh

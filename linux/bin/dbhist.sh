@@ -112,8 +112,7 @@ __db_hist_prompt() {
     __command="${BASH_REMATCH[3]}"
     __command="${__command//\"/\"\"}"
     __dbhist_sqlite <<-END
-INSERT INTO history(hist_id, epoch, cmd, ppid, pwd, salt)
-VALUES("${__num}", "${__epoch}", "${__command}", ${PPID}, "${__pwd//\"/""}", ${__dbhist_salt});
+INSERT INTO history(hist_id, epoch, cmd, ppid, pwd, salt) VALUES('${__num}', '${__epoch}', '${__command}', ${PPID}, '${__pwd//\'/\'\'}', ${__dbhist_salt});
 END
   else
     >&2 echo "warning: history not parseable for dbhist <<${__history}>>"
@@ -244,18 +243,18 @@ END
       if [[ "${__one_query}" != *% ]]; then
         __one_query+="%"
       fi
-      __sql+="AND cmd LIKE \"${__one_query}\" ESCAPE '\' "
+      __sql+="AND cmd LIKE '${__one_query}' ESCAPE '\' "
     done;
   fi
   __pwd_l="${PWD//\"/""}"
   case "${__location}" in
     (here)
-      __sql+="AND (pwd == \"${__pwd_l}\") "
+      __sql+="AND (pwd == '${__pwd_l}') "
     ;;
     (under)
       __pwd_l="${__pwd_l//%/\%}"
       __pwd_l="${__pwd_l//_/\_}"
-      __sql+="AND (pwd LIKE \"${__pwd_l}%\" ESCAPE '\') "
+      __sql+="AND (pwd LIKE '${__pwd_l}%' ESCAPE '\') "
     ;;
   esac
   __sql+="GROUP BY cmd "
